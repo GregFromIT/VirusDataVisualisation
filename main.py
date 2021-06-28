@@ -1,8 +1,10 @@
 import pandas as pd
 import math
-import scipy
+import numpy as np
+import scipy as sp
 from matplotlib import pyplot as plt
-import matplotlib.animation as animation
+import matplotlib.animation as anim
+from matplotlib.animation import FuncAnimation
 import time
 
 # x = [1,2,3]
@@ -16,21 +18,24 @@ import time
 # plt.ylabel('y')
 # plt.draw()
 # plt.show()
+plt.style.use('seaborn-pastel')
+
 
 fig = plt.figure()
-ax1 = fig.add_subplot(1,1,1)
+ax = plt.axes(xlim=(0, 4), ylim=(-2, 2))
+line, = ax.plot([], [], lw=3)
 
+def init():
+    line.set_data([], [])
+    return line,
 def animate(i):
-    pullData = open("sampleText.txt","r").read()
-    dataArray = pullData.split('\n')
-    xar = []
-    yar = []
-    for eachLine in dataArray:
-        if len(eachLine)>1:
-            x,y = eachLine.split(',')
-            xar.append(int(x))
-            yar.append(int(y))
-    ax1.clear()
-    ax1.plot(xar,yar)
-ani = animation.FuncAnimation(fig, animate, interval=1000)
-plt.show()
+    x = np.linspace(0, 4, 1000)
+    y = np.sin(2 * np.pi * (x - 0.01 * i))
+    line.set_data(x, y)
+    return line,
+
+anim = FuncAnimation(fig, animate, init_func=init,
+                               frames=200, interval=20, blit=True)
+
+
+anim.save('sine_wave.gif', writer='imagemagick')
