@@ -1,41 +1,43 @@
-import pandas as pd
+#helpful stuff
+import time
 import math
+import random
+
+#imports data processing
+import pandas as pd
 import numpy as np
 import scipy as sp
-from matplotlib import pyplot as plt
+from scipy.stats import norm
+
+#import visualisations
 import matplotlib.animation as anim
+from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
-import time
 
-# x = [1,2,3]
-# y= [2,4,6]
-# z = [3,6,9]
-# plt.plot(x,y)
-# plt.plot(x,z)
-# plt.plot(z,y)
-# plt.title('ref title')
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.draw()
-# plt.show()
-plt.style.use('seaborn-pastel')
-
-
-fig = plt.figure()
-ax = plt.axes(xlim=(0, 4), ylim=(-2, 2))
-line, = ax.plot([], [], lw=3)
-
-def init():
-    line.set_data([], [])
-    return line,
-def animate(i):
-    x = np.linspace(0, 4, 1000)
-    y = np.sin(2 * np.pi * (x - 0.01 * i))
-    line.set_data(x, y)
-    return line,
-
-anim = FuncAnimation(fig, animate, init_func=init,
-                               frames=200, interval=20, blit=True)
+#create person class
+class Person():
+    def __init__(self, startingImmunity):
+        if random.randint(0,100) < startingImmunity:
+            self.immunity = True
+        else:
+            self.immunity = False
+        #initalisating other variables
+        self.contagiousness = 0
+        self.mask = False
+        self.contagiousDays = 0
+        self.friends = int((norm.rvs(size=1,loc=0.5,scale=0.15)[0]*10).round(0))
+    def wearMask(self):
+        self.contagiousness /= 2       
+             
+        
 
 
-anim.save('sine_wave.gif', writer='imagemagick')
+
+#Defining the variables
+populationSize = 1*10**6
+Infected = 10
+Recovered = 0
+Susceptible = populationSize - Infected
+InfectedPercent = (Infected/populationSize) *100
+RecoveredPercent = (Recovered/populationSize) *100
+SusceptiblePercent = (Susceptible/populationSize) *100
